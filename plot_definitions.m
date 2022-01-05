@@ -2,14 +2,13 @@
 % EXPORT_FIG: function to export figures nicely to a number of vector & bitmap formats:
 % can be downloaded at (16/05/2017):
 % https://se.mathworks.com/matlabcentral/fileexchange/23629-export-fig
-addpath('\\home.ansatt.ntnu.no\geraldod\Documents\MATLAB\scripts\export_fig');
+file_path = fileparts(mfilename('fullpath'));
+addpath([file_path, '\export_fig']);
 
 % LINSPECER: Plot lots of lines with very distinguishable and aesthetically pleasing colors
 % can be dowloaded at (22/11/2017):
 % https://se.mathworks.com/matlabcentral/fileexchange/42673-beautiful-and-distinguishable-line-colors-+-colormap
-addpath('\\home.ansatt.ntnu.no\geraldod\Documents\MATLAB\scripts\linspecer');
-
-addpath('\\home.ansatt.ntnu.no\geraldod\Documents\MATLAB\scripts\MATLAB2TikZ\src');
+addpath([file_path, '\linspecer']);
 
 % line styles:
 line_style = {'-', '--', ':', '-.', ...
@@ -22,7 +21,7 @@ line_style = {'-', '--', ':', '-.', ...
 line_width = 2.0;
 
 % markers:
-dot_style = {'o', 's', 'd', '^', 'v', '>', '<', 'p', 'h', '+', '*', '.', 'x'};
+marker_style = {'o', 's', 'd', '^', 'v', '>', '<', 'p', 'h', '+', '*', '.', 'x'};
 
 % marker size:
 marker_size = 15.0;
@@ -34,7 +33,7 @@ std_color = {'r', 'g', 'b', 'y', 'm', 'c', 'k', 'w'};
 % clr = linspecer(7, 'qualitative');
 
 % figure exporting settings:
-export_setting = {'-pdf', '-png', '-transparent', '-nofontswap'};
+export_setting = {'-svg', '-png', '-transparent', '-nofontswap'}; % '-pdf', 
 
 % font size:
 font_size = 12;
@@ -46,7 +45,12 @@ font_name = 'Times';
 font_setting = {'fontName', font_name, 'fontSize', font_size};
 
 % LaTeX settings:
-latex_setting = {'fontName', font_name, 'fontSize', font_size, 'interpreter', 'LaTeX'};
+LaTeX_setting = {'fontName', font_name, 'fontSize', font_size, 'interpreter', 'LaTeX'};
+
+% Save as .mat file:
+save('plot_settings', ...
+     'line_style', 'line_width', 'marker_style', 'marker_size', 'std_color', ...
+     'export_setting', 'font_size', 'font_name', 'font_setting');
 
 % window ratio:
 % window_ratio = (1.0 + sqrt(5.0))/2.0;
