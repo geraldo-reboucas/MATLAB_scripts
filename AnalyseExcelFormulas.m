@@ -76,19 +76,26 @@ function A=AnalyseExcelFormulas(filename,outfilename)
 % d=dir('c:\*xls');
 % for i=1:length(d)
 %     fprintf('AnalyseExcelFormulas(''c:\\%s'');\n',d(i).name);
-% end;
+% end
+MAX_SIZE = 2.0.^[20 14]; % = [1048576 16384];
 A=[];
 iBig=0;
-if nargin<1 filename  = 'c:\NonGenericSwap.xls'; end;
-if nargin<2 outfilename = [strtok(filename,'.') '_formulas.xls']; end;
+if(nargin < 1)
+    filename  = 'c:\NonGenericSwap.xls';
+end
+
+if(nargin < 2)
+    outfilename = [strtok(which(filename),'.') '_FORMULAS.xls'];
+end
+
 h.activex1 = actxserver('Excel.Application');
-invoke(h.activex1.Workbooks,'Open',filename);
+invoke(h.activex1.Workbooks, 'Open', which(filename));
 NumWorksheets = h.activex1.Worksheets.Count;
-if NumWorksheets<1
-    errordlg(mfilename,'No worksheets');
+
+if(NumWorksheets < 1)
+    errordlg(mfilename, 'No worksheets');
 else
-    for iWorksheets = 1 : NumWorksheets
-        
+    for iWorksheets = 1:NumWorksheets
         try
             % GET VALUES AND FORMULAS FROM THE EXCEL SHEET
             TargetSheet = get(h.activex1.sheets,'item',iWorksheets);
@@ -118,9 +125,9 @@ else
                         C{iWorksheets}(i,1:length(B))=B;
                         iBig=iBig+1;
                         E(iBig,1:length(B))=B;
-                    end;
-                end;
-            end;
+                    end
+                end
+            end
             i=1;
             D{iWorksheets}{1,1}=['''"' TargetSheet.Name '" by col'];
             iBig=iBig+1;
@@ -133,40 +140,42 @@ else
                         D{iWorksheets}(i,1:length(B))=B;
                         iBig=iBig+1;
                         E(iBig,1:length(B))=B;
-                    end;
-                end;
-            end;
-        end;
-    end;
+                    end
+                end
+            end
+        catch
+            % pass
+        end
+    end
     %close(h.activex1);
     
     % WRITE OUTPUT
     iSheet=0;
     for iWorksheets = 1 : NumWorksheets
         iSheet=iSheet+1;
-        if ~isempty(C{iWorksheets}) & ~isempty(C{iWorksheets})
-            xlswrite(outfilename,C{iWorksheets},iSheet);
+        if ~isempty(C{iWorksheets}) && ~isempty(D{iWorksheets})
+            writecell(C{iWorksheets}, outfilename, 'sheet', iSheet);
             iSheet=iSheet+1;
-            xlswrite(outfilename,D{iWorksheets},iSheet);
-        end;
-    end;
-    if ~isempty(E)
-        xlswrite(outfilename,E,iSheet+1);
-    end;
-end;
-function B = AnalyseExcelFormulas_(r,c,F,V);
+            writecell(D{iWorksheets}, outfilename, 'sheet', iSheet);
+        end
+    end
+%     if ~isempty(E)
+%         writecell(E, outfilename, 'sheet', iSheet + 1);
+%     end
+end
+function B = AnalyseExcelFormulas_(r,c,F,V)
 B=[];
 v = V{r,c};
 f = F{r,c};
 good_v = ~isempty(v) && any(~isnan(v));
 good_f = ~isempty(f) && any(~isnan(f)) && f(1)=='=';
-if good_v | good_f
+if good_v || good_f
     B{1}=nn2an(r+2,c+1);
     B{2}=v;
     if good_f
         B{3}=['''' f];
-    end;
-end;
+    end
+end
 function cr = nn2an(r,c)
 % Thanks Brett Shoelson
 t = [floor((c - 1)/26) + 64 rem(c - 1, 26) + 65];
