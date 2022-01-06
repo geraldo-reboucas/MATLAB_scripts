@@ -10,47 +10,42 @@ addpath([file_path, '\export_fig']);
 % https://se.mathworks.com/matlabcentral/fileexchange/42673-beautiful-and-distinguishable-line-colors-+-colormap
 addpath([file_path, '\linspecer']);
 
+plot_def = struct;
 % line styles:
-line_style = {'-', '--', ':', '-.', ...
-              '-', '--', ':', '-.', ...
-              '-', '--', ':', '-.', ...
-              '-', '--', ':', '-.', ...
-              };
-      
+plot_def.line = {'-', '--', ':', '-.'};
+
 % line width:
-line_width = 2.0;
+plot_def.line_width = 2.0;
 
 % markers:
-marker_style = {'o', 's', 'd', '^', 'v', '>', '<', 'p', 'h', '+', '*', '.', 'x'};
+plot_def.marker = {'o', 's', 'd', '^', 'v', '>', '<', 'p', 'h', '+', '*', '.', 'x'};
 
 % marker size:
-marker_size = 15.0;
+plot_def.marker_size = 15.0;
 
 % MATLAB's standard colors:
-std_color = {'r', 'g', 'b', 'y', 'm', 'c', 'k', 'w'};
+plot_def.color_std = {'r', 'g', 'b', 'y', 'm', 'c', 'k', 'w'};
 
 % different colors:
-% clr = linspecer(7, 'qualitative');
+plot_def.color = linspecer(8, 'qualitative');
 
 % figure exporting settings:
-export_setting = {'-svg', '-png', '-transparent', '-nofontswap'}; % '-pdf', 
+plot_def.export = {'-svg', '-png', '-transparent', '-nofontswap'}; % '-pdf', 
 
 % font size:
-font_size = 12;
+plot_def.font_size = 12;
 
 % font name:
-font_name = 'Times';
+plot_def.font_name = 'Times';
 
 % font settings:
-font_setting = {'fontName', font_name, 'fontSize', font_size};
+plot_def.font = {'fontName', plot_def.font_name, 'fontSize', plot_def.font_size};
 
 % LaTeX settings:
-LaTeX_setting = {'fontName', font_name, 'fontSize', font_size, 'interpreter', 'LaTeX'};
+plot_def.LaTeX_setting = [plot_def.font(:)', {'interpreter'}, {'LaTeX'}];
 
 % Save as .mat file:
-save('plot_settings', ...
-     'line_style', 'line_width', 'marker_style', 'marker_size', 'std_color', ...
-     'export_setting', 'font_size', 'font_name', 'font_setting');
+save('plot_settings', 'plot_def');
 
 % window ratio:
 % window_ratio = (1.0 + sqrt(5.0))/2.0;
